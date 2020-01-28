@@ -1,10 +1,57 @@
+import 'package:flutter/cupertino.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'post.g.dart';
+
+@JsonSerializable()
 class Post {
+  Post(this.source,
+        this.author,
+        this.title,
+        this.description,
+        this.url,
+        this.urlToImage,
+        this.publishedAt,
+        this.content);
+
+  @JsonKey(name: 'source')
+  Source source;
+  @JsonKey(name: 'author')
+  String author;
+  @JsonKey(name: 'title')
+  String title;
+  @JsonKey(name: 'description')
+  String description;
+  @JsonKey(name: 'url')
   String url;
+  @JsonKey(name: 'urlToImage')
+  String urlToImage;
+  @JsonKey(name: 'publishedAt')
+  String publishedAt;
+  @JsonKey(name: 'content')
+  String content;
+
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostToJson(this);
+}
+
+class Source {
+  String id;
   String name;
 
-  Post(this.url, this.name);
+  Source({this.id, this.name});
 
-  Post.defaultPost() : this(
-      "https://instagram.fiev1-1.fna.fbcdn.net/v/t51.2885-15/e35/75580657_560769188050551_332563824158768362_n.jpg?_nc_ht=instagram.fiev1-1.fna.fbcdn.net&_nc_cat=103&_nc_ohc=xfh_NhxHlosAX9HQUql&oh=545730e3c1f11f4f7f56afc3c23e2194&oe=5ED6BC24",
-      "flutter");
+  Source.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
+  }
 }
+

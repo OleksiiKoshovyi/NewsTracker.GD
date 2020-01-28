@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gd_login/bloc/bloc_provider.dart';
 import 'package:gd_login/bloc/fetch_post_bloc.dart';
@@ -17,8 +15,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  var _scrollController = ScrollController();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -27,8 +27,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    var bloc = BlocProvider.of<PostBloc>(context);
+    bloc.fetchPost();
+
+    _scrollController.addListener((){
+      if(_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        bloc.fetchPost(step: 1);
+        //buildBody(context);
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _getAppBar(),
       body: buildBody(context),
       bottomNavigationBar: _getBottomNavigationBar(),
     );
@@ -66,12 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _getAppBar(){
     return AppBar(
-      title: Text(widget.title),
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            exit(0);
-          }),
+      title: Text((widget.title) == null ? "Дописи" : widget.title),
     );
   }
 
@@ -79,8 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var bloc = BlocProvider.of<PostBloc>(context);
     bloc.fetchPost();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 100),
+    return Container(
       child: StreamBuilder<List<Post>>(
           stream: bloc.postStream,
           builder: (context, snapshot) {
@@ -102,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView.builder(
             scrollDirection: Axis.vertical,
             itemCount: list.length,
+            controller: _scrollController,
             itemBuilder: (context, index) {
               return Container(child: PostItem(list[index]));
             }),
