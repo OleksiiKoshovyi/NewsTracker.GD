@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       bloc: PostBloc(),
       child: MaterialApp(
-        title: 'Дописи',
+        title: 'News',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

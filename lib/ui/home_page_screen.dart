@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _getAppBar(){
     return AppBar(
-      title: Text((widget.title) == null ? "Дописи" : widget.title),
+      title: Text((widget.title) == null ? "News" : widget.title),
     );
   }
 

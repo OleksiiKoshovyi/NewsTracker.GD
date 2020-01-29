@@ -16,7 +16,7 @@ Post _$PostFromJson(Map<String, dynamic> json) {
       json['description'] ?? "",
       json['url'] ?? "",
       json['urlToImage'] ?? "",
-      json['publishedAt'] ?? "",
+      getDate(json['publishedAt'] ?? "--T::Z"),
       json['content'] ?? "");
 }
 
@@ -30,3 +30,9 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'publishedAt': instance.publishedAt,
       'content': instance.content
     };
+
+String getDate(String dateTime){
+  String date = dateTime.split("T")[0];
+  String time = dateTime.split("T")[1].split("Z")[0];
+  return date.split("-").join(".") + " " + time;
+}

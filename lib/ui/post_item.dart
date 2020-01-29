@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gd_login/data/post.dart';
 import 'post_comment_screen.dart';
+import 'package:share/share.dart';
+
 
 class PostItem extends StatelessWidget {
   final Post _item;
@@ -30,7 +32,6 @@ class PostItem extends StatelessWidget {
           _getPostDate(),
         ],
       ),);
-
   }
 
   Widget _getTopPostInfo(){
@@ -73,21 +74,24 @@ class PostItem extends StatelessWidget {
   Widget _getPostControls(BuildContext context){
     return Padding(
       padding: const EdgeInsets.fromLTRB(10,0,10,10),
-      child: Row(         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
             child: Row(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: Icon(Icons.favorite_border,),
+                  child: LikeButton(),
                 ),
                 GestureDetector(
                     onTap: () => _navigateToDetail(context),
                     child: Icon(Icons.message),),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Icon(Icons.send),
+                  child: GestureDetector(
+                    onTap: () {Share.share(_item.url);},
+                    child: Icon(Icons.send),),
                 ),
               ],
             ),
@@ -95,7 +99,7 @@ class PostItem extends StatelessWidget {
           Container(
             child:Row(
               children: <Widget>[
-                Icon(Icons.turned_in_not),
+                ArchiveButton()
               ],),
           ),
         ],),
@@ -136,4 +140,51 @@ class PostItem extends StatelessWidget {
         ],
       ),
     );
-  }}
+  }
+}
+
+class LikeButton extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => new _LikeButton();
+}
+class _LikeButton extends State<LikeButton>{
+  bool isFavorite = false;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        isFavorite = !isFavorite;
+        setState(() {
+
+        });
+      },
+      child: isFavorite ? Icon(
+        Icons.favorite,
+        color: Colors.red,
+      ): Icon(Icons.favorite_border)
+    );
+  }
+}
+
+class ArchiveButton extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => new _ArchiveButton();
+}
+class _ArchiveButton extends State<ArchiveButton>{
+  bool isArchived = false;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          isArchived = !isArchived;
+          setState(() {
+
+          });
+        },
+        child: isArchived ? Icon(
+          Icons.turned_in,
+          color: Colors.blue,
+        ): Icon(Icons.turned_in_not)
+    );
+  }
+}
